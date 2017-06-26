@@ -1,0 +1,33 @@
+main:
+  type: join
+  delimiter: "\n"
+  number: 1000000
+  sample:
+    type: template
+    template: insert into `User` (id, uid, fName, lName, age) values ({0}, "{1}", "{2}", "{3}", "{4}");
+    samples:
+      - type: seqInt
+      - type: rndStr
+      - fName
+      - lName
+      - age
+generators:
+  - id: fName
+    type: rndSet
+    samples:
+    - Alexander
+    - Andreas
+    - Benjamin
+    - John
+  - id: lName
+    type: rndSet
+    samples:
+    - Smith
+    - Johnson
+    - Williams
+    - Jones
+    - Brown
+  - id: age
+    type: rndInt
+    shift: 21
+    count: 30

@@ -13,8 +13,9 @@ public final class HandlerRandomAny extends ConfigurationHandlerDefault<Generato
 
         Source source = context.get(Source.class, c.source);
 
-        Generator[] candidates = transform(c.samples, t -> context.get(Generator.class, t), Generator.class);
-        return a -> candidates[source.nextInt(candidates.length)].append(a);
+        Generator[] samples = transform(c.samples, t -> context.get(Generator.class, t), Generator.class);
+
+        return a -> samples[source.nextInt(samples.length)].append(a);
     }
 
     static final class Configuration {

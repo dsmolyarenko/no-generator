@@ -18,6 +18,9 @@ public final class HandlerJoin extends ConfigurationHandlerDefault<Generator, Ha
             int count = c.number;
 
             for (int i = 0; i < count; i++) {
+                if (Thread.interrupted()) {
+                    break;
+                }
                 if (i != 0) {
                     if (c.delimiter != null) {
                         a.append(c.delimiter);

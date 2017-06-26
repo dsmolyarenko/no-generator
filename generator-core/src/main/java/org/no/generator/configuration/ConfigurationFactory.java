@@ -1,5 +1,7 @@
 package org.no.generator.configuration;
 
+import org.no.generator.Generator;
+import org.no.generator.Generators;
 import org.no.generator.Source;
 import org.no.generator.Sources;
 import org.no.generator.configuration.context.DependencyContext;
@@ -32,6 +34,17 @@ public class ConfigurationFactory {
 
         DependencyContext system = new DependencyContextStatic()
             .register(Source.class, "default", Sources.createDefault())
+
+            .register(Generator.class, "SystemTimeNanoseconds" , Generators.createSystemTimeNanoseconds())
+            .register(Generator.class, "SystemTimeMicroseconds", Generators.createSystemTimeMicroseconds())
+            .register(Generator.class, "SystemTimeMilliseconds", Generators.createSystemTimeMilliseconds())
+            .register(Generator.class, "SystemTimeSeconds"     , Generators.createSystemTimeSeconds())
+            .register(Generator.class, "SystemTimeMinutes"     , Generators.createSystemTimeMinutes())
+            .register(Generator.class, "SystemTimeHours"       , Generators.createSystemTimeHours())
+            .register(Generator.class, "SystemTimeDays"        , Generators.createSystemTimeDays())
+            .register(Generator.class, "NetworkIp"   , Generators.createNetworkIp())
+            .register(Generator.class, "NetworkHost" , Generators.createNetworkHost())
+            .register(Generator.class, "NetworkMac"  , Generators.createNetworkMac())
         ;
 
         DependencyContext dependencyContext = new DependencyContextDefault(system,

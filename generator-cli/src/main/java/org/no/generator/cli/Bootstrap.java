@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.Thread.State;
 import java.util.ResourceBundle;
 
 import org.apache.commons.cli.CommandLine;
@@ -20,28 +21,34 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.no.generator.Generator;
 import org.no.generator.Source;
-import org.no.generator.cli.util.Utils;
 import org.no.generator.configuration.ConfigurationFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class Bootstrap {
 
     public static void main(String[] arguments) throws IOException, InterruptedException {
 
         Options options = new Options()
-            .addOption(option("c", "config"))
-            .addOption(option("o", "output"))
-            .addOption(option("b", "buffer"));
+            .addOption(option("h", "help"  , false))
+            .addOption(option("c", "config", true ))
+            .addOption(option("o", "output", true ))
+            .addOption(option("b", "buffer", true ));
 
         Configuration configuration;
         try {
             CommandLine cl = new DefaultParser().parse(options, arguments);
+            if (cl.hasOption("h")) {
+                help(options, null);
+            }
             configuration = prepareConfiguration(
                 cl.getOptionValue("c"),
                 cl.getOptionValue("o", "-"),
                 cl.getOptionValue("b", "8192")
             );
         } catch (ParseException e) {
-            help(options, e);
+
             throw new Error();
         }
 
@@ -50,10 +57,33 @@ public class Bootstrap {
         configurationFactory.collect(Generator.class, configuration.root.getGenerators());
 
         Generator generator = configurationFactory.resolve(Generator.class, configuration.root.getMain());
-        try (Writer w = configuration.writer) {
-            generator.append(w);
-        }
 
+        Thread main = new Thread(() -> {
+            try (Writer w = configuration.writer) {
+                generator.append(w);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        main.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            // notify about termination
+            main.interrupt();
+
+            // wait for terminated state for a second
+            for (int i = 0; i < 10; i++) {
+                System.err.println("await for termination...");
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (main.getState() == State.TERMINATED) {
+                    break;
+                }
+            }
+        }));
     }
 
     private static void help(Options options, ParseException e) {
@@ -127,15 +157,16 @@ public class Bootstrap {
         } catch (IOException e) {
             throw new ParseException(e.getMessage());
         }
-        configuration.root = Utils.read(reader, Root.class);
+        ObjectMapper om = new ObjectMapper(new YAMLFactory());
+        configuration.root = om.readValue(reader, Root.class);
 
         return configuration;
     }
 
     private static ResourceBundle rb = ResourceBundle.getBundle("messages");
 
-    private static Option option(String name, String full) {
-        return new Option(name, full, true, "option.description." + name) {
+    private static Option option(String name, String full, boolean argument) {
+        return new Option(name, full, argument, "option.description." + name) {
             private static final long serialVersionUID = 1L;
 
             @Override

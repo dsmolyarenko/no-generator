@@ -2,11 +2,11 @@ package org.no.generator.configuration;
 
 import static org.no.generator.configuration.util.ObjectUtils.transform;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Locale;
 
 import org.no.generator.Generator;
+import org.no.generator.Generators;
 import org.no.generator.configuration.context.DependencyContext;
 
 public final class HandlerFormat extends ConfigurationHandlerDefault<Generator, HandlerFormat.Configuration> {
@@ -14,21 +14,13 @@ public final class HandlerFormat extends ConfigurationHandlerDefault<Generator, 
     @Override
     protected Generator create(Configuration c, DependencyContext context) {
 
-        Generator[] arguments = transform(c.arguments, t -> context.get(Generator.class, t), Generator.class);
+        Generator[] arguments = transform(c.samples, t -> context.get(Generator.class, t), Generator.class);
 
         MessageFormat mf = (c.locale == null)
             ? new MessageFormat(c.format)
             : new MessageFormat(c.format, c.locale);
 
-        return a -> a.append(mf.format(transform(arguments, t -> {
-            StringBuilder sb = new StringBuilder();
-            try {
-                t.append(sb);
-            } catch (IOException e) {
-                throw new IllegalStateException();
-            }
-            return sb.toString();
-        }, Object.class)));
+        return a -> a.append(mf.format(transform(arguments, t -> Generators.toString(t), Object.class)));
     }
 
     public static final class Configuration {
@@ -37,7 +29,7 @@ public final class HandlerFormat extends ConfigurationHandlerDefault<Generator, 
 
         private Locale locale;
 
-        private Object[] arguments;
+        private Object[] samples;
 
     }
 }
