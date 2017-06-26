@@ -37,9 +37,9 @@ public final class HandlerRandomNumber extends ConfigurationHandlerDefault<Gener
 
         private Locale locale;
 
-        private double shift;
+        private double shift = 0.0;
 
-        private double scale;
+        private double scale = 1.0;
 
     }
 

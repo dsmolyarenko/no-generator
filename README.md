@@ -1,6 +1,6 @@
 # Data Generator Tool
 
-In the age of big data analysis and other buzzwords one of the hottest things is an estimation of production environment. One of the biggest issue that can be faced on a performance stage is an absence of real source data. Not only financial organization but many others are not wiling to provide even obfuscated production data to be used outside establishment. So the proper modeling of production data is an important part of development workflow.
+In the age of big data analysis and other buzzwords one of the hottest things is an estimation of production environment. One of the biggest issues that can be faced on a performance stage is an absence of real source data. Not only financial organization, but many others are not willing to provide even obfuscated production data to be used outside the establishment. So the proper modeling of production data is an important part of development workflow.
 
 NO provides a stream based DG framework which having a flexible configuration for any unconditioned data structures can produce more than half a billion characters per second. When the base extension provides an implementation to cover the vast majority of cases the modular SPI based architecture allows to easily integrate any specific additional module.
 
@@ -46,6 +46,22 @@ sources:
 
 The configuration should contain main appender which can be described inline or via references to others generators or number sources described in corresponding sections. See full description of appenders [here](doc/help.yaml).
 
+#### Generator Structure:
+
+```
+id:     - Identifier of the generator to use as a reference in the composition
+parent: - Parent configuration reference to inherit properties from another generator
+type:   - The type of a generator to specify the generator implementation. See the [full](doc/generators.md) list.
+...:    - A type specific set of generator properties
+```
+#### Source Structure:
+
+```
+id:     - Identifier of the number source to use as a reference in the composition
+parent: - Parent configuration reference to inherit properties from another source
+type:   - The type of a source to specify the source implementation. See the [full](doc/sources.md) list.
+...:    - A type specific set of source properties
+```
 ### Streaming
 The tool can be run as part of existing application or as a command line tool. See dev example below: 
 ```

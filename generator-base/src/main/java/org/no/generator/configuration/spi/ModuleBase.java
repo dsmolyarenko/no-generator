@@ -14,6 +14,7 @@ import org.no.generator.configuration.HandlerRandomString;
 import org.no.generator.configuration.HandlerSequenceInteger;
 import org.no.generator.configuration.HandlerSequenceString;
 import org.no.generator.configuration.HandlerTemplate;
+import org.no.generator.configuration.HandlerText;
 import org.no.generator.configuration.SourceHandlerFile;
 import org.no.generator.configuration.SourceHandlerRandom;
 import org.no.generator.configuration.SourceHandlerWell;
@@ -25,6 +26,8 @@ public class ModuleBase extends ConfigurationHandlerFactoryDefault {
                 new HandlerJoin());
         add(Generator.class, "loop",
                 new HandlerLoop());
+        add(Generator.class, "text",
+                new HandlerText());
         add(Generator.class, "seqInt",
                 new HandlerSequenceInteger());
         add(Generator.class, "seqStr",
