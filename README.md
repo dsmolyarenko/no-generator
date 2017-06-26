@@ -47,21 +47,17 @@ sources:
 The configuration should contain main appender which can be described inline or via references to others generators or number sources described in corresponding sections. See full description of appenders [here](doc/help.yaml).
 
 #### Generator Structure:
+id     - Identifier of the generator to use as a reference in the composition
+parent - Parent configuration reference to inherit properties from another generator
+type   - The type of a generator to specify the generator implementation. See the [full](doc/generators.md) list.
+...    - A type specific set of generator properties
 
-```
-id:     - Identifier of the generator to use as a reference in the composition
-parent: - Parent configuration reference to inherit properties from another generator
-type:   - The type of a generator to specify the generator implementation. See the [full](doc/generators.md) list.
-...:    - A type specific set of generator properties
-```
 #### Source Structure:
+id     - Identifier of the number source to use as a reference in generators
+parent - Parent configuration reference to inherit properties from another source
+type   - The type of a source to specify the source implementation. See the [full](doc/sources.md) list.
+...    - A type specific set of source properties
 
-```
-id:     - Identifier of the number source to use as a reference in the composition
-parent: - Parent configuration reference to inherit properties from another source
-type:   - The type of a source to specify the source implementation. See the [full](doc/sources.md) list.
-...:    - A type specific set of source properties
-```
 ### Streaming
 The tool can be run as part of existing application or as a command line tool. See dev example below: 
 ```

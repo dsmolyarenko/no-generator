@@ -53,7 +53,7 @@ main:
     - type: text
       text: b
 ```
-* **rndInt* - Append random integer.
+* **rndInt** - Append random integer.
 ```yaml
 main:
   type: rndInt
@@ -63,7 +63,7 @@ main:
   source:
     type: well
 ```
-* **rndNum* - Append random number. See [decimalFormat](https://docs.oracle.com/javase/tutorial/i18n/format/decimalFormat.html) for the formatting rules.
+* **rndNum** - Append random number. See [decimalFormat](https://docs.oracle.com/javase/tutorial/i18n/format/decimalFormat.html) for the formatting rules.
 ```yaml
 main:
   type: rndNum
@@ -79,7 +79,7 @@ main:
   source:
     type: well
 ```
-* **rndSet* - Append random text sample from specified text samples sequence.
+* **rndSet** - Append random text sample from specified text samples sequence.
 ```yaml
 main:
   type: rndSet
