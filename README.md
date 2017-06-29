@@ -64,7 +64,7 @@ Pproperty | Description | Mandatory
 `distribution` | the list of weights of frequency deviation from uniformly distribution. See distribution example below.
 ... | a type specific set of source properties
 
-Distribution example:
+The linear spline is used to interpolate the distribution. See an example:
 ```yaml
 main:
   type: join
@@ -80,7 +80,6 @@ main:
       distribution: [ 0.0, 1.0 ]
 ```
 ![DGT Architecture](doc/d01.png)
-The linear spline is used to interpolate the distribution.
 
 ### Streaming
 
