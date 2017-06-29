@@ -16,6 +16,10 @@ public final class HandlerTemplate extends ConfigurationHandlerDefault<Generator
     @Override
     protected Generator create(Configuration c, DependencyContext context) {
 
+        if (c.template == null) {
+            throw new ConfigurationException("Property `template` is not defined");
+        }
+
         if (c.samples == null) {
             throw new ConfigurationException("Property `samples` is not defined");
         }

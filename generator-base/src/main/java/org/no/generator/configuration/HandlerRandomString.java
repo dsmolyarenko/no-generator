@@ -37,7 +37,7 @@ public final class HandlerRandomString extends ConfigurationHandlerDefault<Gener
 
         private int length = 16;
 
-        private String[] ranges = new String[] { "0-9", "a-z", "A-Z" };
+        private String[] ranges = { "0-9", "a-z", "A-Z" };
 
     }
 

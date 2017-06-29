@@ -17,6 +17,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <finalName>generator</finalName>
                     <archive>
                         <manifest>
                             <mainClass>org.no.generator.cli.Bootstrap</mainClass>

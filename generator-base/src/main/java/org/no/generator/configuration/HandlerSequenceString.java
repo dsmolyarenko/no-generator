@@ -8,14 +8,14 @@ public final class HandlerSequenceString extends ConfigurationHandlerDefault<Gen
     @Override
     protected Generator create(Configuration c, DependencyContext context) {
 
-        if (c.seqStrChrMin >= c.seqStrChrMax) {
-            throw new IllegalArgumentException("Max character should go after min in the character table: " + c.seqStrChrMin);
+        if (c.min >= c.max) {
+            throw new IllegalArgumentException("Max character should go after min in the character table: " + c.min);
         }
 
         // create initial buffer
-        char[] buffer = new char[c.seqStrLen];
+        char[] buffer = new char[c.length];
         for (int i = 0; i < buffer.length; i++) {
-            buffer[i] = c.seqStrChrMin;
+            buffer[i] = c.min;
         }
 
         return a -> {
@@ -29,11 +29,11 @@ public final class HandlerSequenceString extends ConfigurationHandlerDefault<Gen
             while (true) {
                 int index = buffer.length - 1 - position; // inverse order
                 char v = buffer[index];
-                if (v < c.seqStrChrMax) {
+                if (v < c.max) {
                     buffer[index] = ++v;
                     break;
                 }
-                buffer[index] = c.seqStrChrMin;
+                buffer[index] = c.min;
                 if (++position == buffer.length) {
                     position = 0;
                 }
@@ -43,11 +43,11 @@ public final class HandlerSequenceString extends ConfigurationHandlerDefault<Gen
 
     public static final class Configuration {
 
-        private int seqStrLen = 16;
+        private int length = 16;
 
-        private char seqStrChrMin = 'A';
+        private char min = 'A';
 
-        private char seqStrChrMax = 'Z';
+        private char max = 'Z';
 
     }
 }

@@ -6,15 +6,16 @@ NO provides a stream based DG framework which having a flexible configuration fo
 
 ## Architecture
 
-![DGT Architecture](doc/img1.png)
-
 There are two functional phases to the architecture:
 
 1. Configuration;
 2. Streaming;
 
 ### Configuration
-The root appender is being configured via YAML configuration file. See a simple SQL example below:
+
+![DGT Architecture](doc/img2.png)
+
+The `main` appender is being configured via YAML configuration file. See a simple SQL example below:
 
 ```yaml
 main:
@@ -44,24 +45,50 @@ generators:
 sources:
 ```
 
-The configuration should contain main appender which can be described inline or via references to others generators or number sources described in corresponding sections. See full description of appenders [here](doc/help.yaml).
+The generators or random data source can be described inline or via references. Additional root section `generators` and `sources` are provided.
 
 #### Generator Structure:
-id     - Identifier of the generator to use as a reference in the composition
-parent - Parent configuration reference to inherit properties from another generator
-type   - The type of a generator to specify the generator implementation. See the [full](doc/generators.md) list.
-...    - A type specific set of generator properties
+Pproperty | Description | Mandatory
+--- | --- | ---
+`id` | the identifier of the generator to use as a reference in the composition
+`parent` | a parent configuration reference to inherit properties from another generator
+`type` | the type of a generator to specify the generator implementation. See the [full](doc/generators.md) list of supported types | if parent is not specified
+... | a type specific set of generator properties
 
 #### Source Structure:
-id     - Identifier of the number source to use as a reference in generators
-parent - Parent configuration reference to inherit properties from another source
-type   - The type of a source to specify the source implementation. See the [full](doc/sources.md) list.
-...    - A type specific set of source properties
+Pproperty | Description | Mandatory
+--- | --- | ---
+`id` | the identifier of the number data source to use as a reference in the other generators
+`parent` | a parent configuration reference to inherit properties from another source
+`type` | the type of a source to specify the source implementation. See the [full](doc/sources.md) list of supported types. | if parent is not specified
+`distribution` | the list of weights of frequency deviation from uniformly distribution. See distribution example below.
+... | a type specific set of source properties
+
+Distribution example:
+```yaml
+main:
+  type: join
+  delimiter: "\n"
+  number: 1000000
+  sample:
+    type: rnddec
+    format: '00000'
+    shift: 0
+    scale: 100
+    source:
+      type: well
+      distribution: [ 0.0, 1.0 ]
+```
+![DGT Architecture](doc/d01.png)
+The linear spline is used to interpolate the distribution.
 
 ### Streaming
+
+![DGT Architecture](doc/img1.png)
+
 The tool can be run as part of existing application or as a command line tool. See dev example below: 
 ```
-java -jar generator-cli/target/generator-cli-1.0-SNAPSHOT-jar-with-dependencies.jar -c generator-cli/configuration.yaml -o /dev/stdout
+java -jar generator-cli/target/generator.jar -c generator-cli/configuration.yaml -o /dev/stdout
 ```
 That produces a sql based random data:
 ```

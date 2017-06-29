@@ -1,45 +1,30 @@
 package org.no.generator.configuration;
 
-import java.io.IOException;
-
 import org.no.generator.Generator;
 import org.no.generator.configuration.context.DependencyContext;
+import org.no.generator.util.MutableInt;
 
 public final class HandlerSequenceInteger extends ConfigurationHandlerDefault<Generator, HandlerSequenceInteger.Configuration> {
 
     @Override
     protected Generator create(Configuration c, DependencyContext context) {
-
-        return new Generator() {
-
-            private int sequence; {
-                if (c.seqIntMin != null) {
-                    sequence = c.seqIntMin;
-                }
-            }
-
-            @Override
-            public void append(Appendable a) throws IOException {
-                a.append(Integer.toString(sequence++));
-
-                if (c.seqIntMax != null) {
-                    if (sequence > c.seqIntMax) {
-                        if (c.seqIntMin != null) {
-                            sequence = c.seqIntMin;
-                        } else {
-                            sequence = 0;
-                        }
-                    }
-                }
-            }
+        MutableInt mutableInt = new MutableInt(c.next);
+        mutableInt.setMin(c.min);
+        mutableInt.setMax(c.max);
+        return a -> {
+            a.append(Long.toString(mutableInt.getAndAdd(c.step)));
         };
     }
 
     public static final class Configuration {
 
-        private Integer seqIntMin;
+        private int min;
 
-        private Integer seqIntMax;
+        private int max;
+
+        private int step = 1;
+
+        private int next;
 
     }
 }

@@ -5,16 +5,13 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 import org.no.generator.Generator;
-import org.no.generator.Source;
 import org.no.generator.configuration.context.DependencyContext;
+import org.no.generator.util.MutableNum;
 
-public final class HandlerRandomNumber extends ConfigurationHandlerDefault<Generator, HandlerRandomNumber.Configuration> {
+public final class HandlerSequenceDecimal extends ConfigurationHandlerDefault<Generator, HandlerSequenceDecimal.Configuration> {
 
     @Override
     protected Generator create(Configuration c, DependencyContext context) {
-
-        Source source = context.get(Source.class, c.source);
-
         DecimalFormat f;
         if (c.format != null) {
             if (c.locale != null) {
@@ -26,21 +23,27 @@ public final class HandlerRandomNumber extends ConfigurationHandlerDefault<Gener
             f = new DecimalFormat();
         }
 
-        return a -> a.append(f.format(c.shift + c.scale * source.nextDouble()));
+        MutableNum mutableNum = new MutableNum(c.next);
+        mutableNum.setMin(c.min);
+        mutableNum.setMax(c.max);
+        return a -> {
+            a.append(f.format(mutableNum.getAndAdd(c.step)));
+        };
     }
 
     public static final class Configuration {
-
-        private Object source;
 
         private String format;
 
         private Locale locale;
 
-        private double shift = 0.0;
+        private double min;
 
-        private double scale = 1.0;
+        private double max;
+
+        private double step = 1;
+
+        private double next;
 
     }
-
 }
