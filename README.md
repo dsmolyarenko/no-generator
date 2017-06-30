@@ -66,10 +66,11 @@ Pproperty | Description | Mandatory
 ... | a type specific set of source properties
 
 The linear spline is used to interpolate the distribution. See an example:
-Result | `di`: | `distribution`:
+
+Result | `di` | `distribution`
 --- | --- | ---
-|![distribution1](doc/d01.png)| ln | [ 0.0, 1.0 ]
-|![distribution2](doc/d02.png)| sp | [ 0.0, 1.0, 0.0 ]
+![distribution1](doc/d01.png) | ln | [ 0.0, 1.0 ]
+![distribution2](doc/d02.png) | sp | [ 0.0, 1.0, 0.0 ]
 
 ### Streaming
 
