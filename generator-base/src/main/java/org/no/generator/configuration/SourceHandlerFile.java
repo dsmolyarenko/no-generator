@@ -29,7 +29,7 @@ public class SourceHandlerFile extends ConfigurationHandlerDefault<Source, Sourc
 
         IncompleteByteContext ctx = new IncompleteByteContext();
 
-        return SourceUtils.decorate(() -> StreamUtils.readLong(ctx, dis, c.bl) / max, c.distribution);
+        return SourceUtils.decorate(() -> StreamUtils.readLong(ctx, dis, c.bl) / max, c.di, c.distribution);
     }
 
     public static final class Configuration {
@@ -41,6 +41,8 @@ public class SourceHandlerFile extends ConfigurationHandlerDefault<Source, Sourc
         private String path;
 
         private double[] distribution;
+
+        private String di  = SourceUtils.LN;
     }
 
 }

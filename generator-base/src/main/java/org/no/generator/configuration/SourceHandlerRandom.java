@@ -11,7 +11,7 @@ public class SourceHandlerRandom extends ConfigurationHandlerDefault<Source, Sou
 
     @Override
     protected Source create(Configuration c, DependencyContext context) {
-        return SourceUtils.decorate((c.secure ? new SecureRandom() : new Random())::nextDouble, c.distribution);
+        return SourceUtils.decorate((c.secure ? new SecureRandom() : new Random())::nextDouble, c.di, c.distribution);
     }
 
     public static final class Configuration {
@@ -19,6 +19,8 @@ public class SourceHandlerRandom extends ConfigurationHandlerDefault<Source, Sou
         private boolean secure;
 
         private double[] distribution;
+
+        private String di = SourceUtils.LN;
 
     }
 

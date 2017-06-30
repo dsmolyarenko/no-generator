@@ -16,7 +16,7 @@ public class SourceHandlerWell extends ConfigurationHandlerDefault<Source, Sourc
 
     @Override
     protected Source create(Configuration c, DependencyContext context) {
-        return SourceUtils.decorate(c.pool.getWell()::nextDouble, c.distribution);
+        return SourceUtils.decorate(c.pool.getWell()::nextDouble, c.di, c.distribution);
     }
 
     public static final class Configuration {
@@ -24,6 +24,8 @@ public class SourceHandlerWell extends ConfigurationHandlerDefault<Source, Sourc
         private Pool pool = Pool.Well1024a;
 
         private double[] distribution;
+
+        private String di  = SourceUtils.LN;
 
         public enum Pool {
 

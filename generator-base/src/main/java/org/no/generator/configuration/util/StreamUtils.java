@@ -14,6 +14,9 @@ public class StreamUtils {
             // fill buffer
             if (context.bufferSize == 0) {
                 context.buffer = readSilently(is);
+                if (context.buffer == -1) {
+                    throw new IllegalStateException("EOF is reached");
+                }
                 context.bufferSize = 8;
             }
 

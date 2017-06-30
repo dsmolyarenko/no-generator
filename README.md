@@ -62,24 +62,14 @@ Pproperty | Description | Mandatory
 `parent` | a parent configuration reference to inherit properties from another source
 `type` | the type of a source to specify the source implementation. See the [full](doc/sources.md) list of supported types. | if parent is not specified
 `distribution` | the list of weights of frequency deviation from uniformly distribution. See distribution example below.
+`di` | the distribution interpolation type. The following values are possible: ln - linear, sp - spline, dd - tbd, nv - tbd,  ha - tbd, ls - tbd.
 ... | a type specific set of source properties
 
 The linear spline is used to interpolate the distribution. See an example:
-```yaml
-main:
-  type: join
-  delimiter: "\n"
-  number: 1000000
-  sample:
-    type: rnddec
-    format: '00000'
-    shift: 0
-    scale: 100
-    source:
-      type: well
-      distribution: [ 0.0, 1.0 ]
-```
-![DGT Architecture](doc/d01.png)
+Result | `di`: | `distribution`:
+--- | --- | ---
+|![distribution1](doc/d01.png)| ln | [ 0.0, 1.0 ]
+|![distribution2](doc/d02.png)| sp | [ 0.0, 1.0, 0.0 ]
 
 ### Streaming
 

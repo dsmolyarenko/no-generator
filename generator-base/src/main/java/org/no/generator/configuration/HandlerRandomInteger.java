@@ -15,12 +15,27 @@ public final class HandlerRandomInteger extends ConfigurationHandlerDefault<Gene
 
         Source source = context.get(Source.class, c.source);
 
+        if (c.shift >= 0 && c.zeros) {
+            int min = Integer.toString(c.shift).length();
+            int max = Integer.toString(c.shift + c.count - 1).length();
+            if (max - min > 0) {
+                return a -> {
+                    String value = Integer.toString(c.shift + source.nextInt(c.count));
+                    for (int i = 0; i < max - value.length(); i++) {
+                        a.append('0');
+                    }
+                    a.append(value);
+                };
+            }
+        }
         return a -> a.append(Integer.toString(c.shift + source.nextInt(c.count)));
     }
 
     public static final class Configuration {
 
         private Object source;
+
+        private boolean zeros;
 
         private int shift;
 
