@@ -9,11 +9,12 @@ import org.no.generator.configuration.HandlerLoop;
 import org.no.generator.configuration.HandlerRandomAny;
 import org.no.generator.configuration.HandlerRandomDecimal;
 import org.no.generator.configuration.HandlerRandomInteger;
-import org.no.generator.configuration.HandlerRandomSet;
+import org.no.generator.configuration.HandlerRandomStringSet;
 import org.no.generator.configuration.HandlerRandomString;
 import org.no.generator.configuration.HandlerSequenceDecimal;
 import org.no.generator.configuration.HandlerSequenceInteger;
 import org.no.generator.configuration.HandlerSequenceString;
+import org.no.generator.configuration.HandlerSet;
 import org.no.generator.configuration.HandlerTemplate;
 import org.no.generator.configuration.HandlerText;
 import org.no.generator.configuration.SourceHandlerFile;
@@ -23,6 +24,8 @@ import org.no.generator.configuration.SourceHandlerWell;
 public class ModuleBase extends ConfigurationHandlerFactoryDefault {
 
     public ModuleBase() {
+        add(Generator.class, "set",
+                new HandlerSet());
         add(Generator.class, "join",
                 new HandlerJoin());
         add(Generator.class, "loop",
@@ -37,8 +40,8 @@ public class ModuleBase extends ConfigurationHandlerFactoryDefault {
                 new HandlerSequenceString());
         add(Generator.class, "rndAny",
                 new HandlerRandomAny());
-        add(Generator.class, "rndSet",
-                new HandlerRandomSet());
+        add(Generator.class, "rndStrSet",
+                new HandlerRandomStringSet());
         add(Generator.class, "rndInt",
                 new HandlerRandomInteger());
         add(Generator.class, "rndDec",

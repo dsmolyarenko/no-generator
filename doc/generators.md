@@ -1,5 +1,14 @@
 #### Base Configuration
 
+* **set** - appends samples in a loop
+```yaml
+main:
+  type: set
+  # Mandatory
+  samples:
+    - CurrentDate
+    - CurrentTime
+```
 * **join** - joins sample a specified number of times using prefix, delimiter and suffix. See additional properties:
 ```yaml
 main:
@@ -88,6 +97,18 @@ main:
   type: rndSet
   # Mandatory
   samples: [ a, b, c ]
+  # Default: default
+  source:
+    type: well
+```
+* **rndStr** - Append fixed length string with random char sequence.
+```yaml
+main:
+  type: rndStr
+  # Default: 16
+  length: 4
+  # Default: [ "0-9", "A-Z", "a-z" ]
+  ranges: [ "0-9" ]
   # Default: default
   source:
     type: well

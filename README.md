@@ -76,7 +76,9 @@ Result | `di` | `distribution`
 
 ![DGT Architecture](doc/img1.png)
 
-The tool can be run as part of existing application or as a command line tool. See dev example below: 
+The tool can be run as part of existing application or as a command line tool. See dev examples below.
+
+#### SQL
 ```
 java -jar generator-cli/target/generator.jar -c generator-cli/configuration.yaml -o /dev/stdout
 ```
@@ -86,4 +88,67 @@ That produces a sql based random data:
 insert into `User` (id, uid, fn, ln, age) values (84208, "QU2aZWglTOsxdKOF", "John", "Jones", "48");
 insert into `User` (id, uid, fn, ln, age) values (84209, "deHeKX60ZlzeQAQy", "John", "Brown", "49");
 ...
+```
+
+#### Elasticsearch
+
+Configuration:
+```yaml
+main:
+  type: join
+  number: 5000000
+  sample:
+    type: template
+    template: |+
+      { "create":  { "_index": "beans", "_type": "bean", "_id": "{0}" }}
+      { "fn" : "{1}", "ln" : "{2}", "age" : {3} }
+    samples:
+      - type: seqInt
+        next: 1
+      - fn
+      - ln
+      - age
+generators:
+  - id: fn
+    type: rndStrSet
+    samples: [ Alexander, Andreas, Benjamin, John ]
+  - id: ln
+    type: rndStrSet
+    samples: [ Smith, Johnson, Williams, Jones, Brown ]
+  - id: age
+    type: rndInt
+    shift: 21
+    count: 30
+```
+Data generating and batching:
+```
+$ java -jar generator-cli/target/generator.jar -c generator-cli/configuration.yaml | split -l 5000 - out
+```
+Uploading (can be run in parallel):
+```
+$ for i in out*; do echo processing $i; curl -H 'Content-Type: application/json' -X PUT http://localhost:9200/_bulk --data-binary @$i >> result.txt && rm $i; done;
+...
+processing outaa
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  691k  100  404k  100  286k  2126k  1509k --:--:-- --:--:-- --:--:-- 2138k
+...
+```
+Verifying:
+```
+$ curl -H 'Accept: application/json' -X GET http://localhost:9200/_cat/indices?pretty
+[
+  {
+    "health" : "yellow",
+    "status" : "open",
+    "index" : "beans",
+    "uuid" : "m11ebrUpRS64z9qnb8Ob7Q",
+    "pri" : "5",
+    "rep" : "1",
+    "docs.count" : "5000000",
+    "docs.deleted" : "0",
+    "store.size" : "151.2mb",
+    "pri.store.size" : "151.2mb"
+  }
+]
 ```

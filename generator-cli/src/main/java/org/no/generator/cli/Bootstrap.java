@@ -48,7 +48,7 @@ public class Bootstrap {
                 cl.getOptionValue("b", "8192")
             );
         } catch (ParseException e) {
-
+            help(options, null);
             throw new Error();
         }
 

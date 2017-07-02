@@ -4,7 +4,7 @@ import org.no.generator.Generator;
 import org.no.generator.Source;
 import org.no.generator.configuration.context.DependencyContext;
 
-public final class HandlerRandomSet extends ConfigurationHandlerDefault<Generator, HandlerRandomSet.Configuration> {
+public final class HandlerRandomStringSet extends ConfigurationHandlerDefault<Generator, HandlerRandomStringSet.Configuration> {
 
     @Override
     protected Generator create(Configuration c, DependencyContext context) {
