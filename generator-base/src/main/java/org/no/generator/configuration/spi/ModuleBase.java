@@ -9,8 +9,10 @@ import org.no.generator.configuration.HandlerLoop;
 import org.no.generator.configuration.HandlerRandomAny;
 import org.no.generator.configuration.HandlerRandomDecimal;
 import org.no.generator.configuration.HandlerRandomInteger;
-import org.no.generator.configuration.HandlerRandomStringSet;
+import org.no.generator.configuration.HandlerRandomName;
 import org.no.generator.configuration.HandlerRandomString;
+import org.no.generator.configuration.HandlerRandomStringSet;
+import org.no.generator.configuration.HandlerRandomSurname;
 import org.no.generator.configuration.HandlerSequenceDecimal;
 import org.no.generator.configuration.HandlerSequenceInteger;
 import org.no.generator.configuration.HandlerSequenceString;
@@ -48,6 +50,10 @@ public class ModuleBase extends ConfigurationHandlerFactoryDefault {
                 new HandlerRandomDecimal());
         add(Generator.class, "rndStr",
                 new HandlerRandomString());
+        add(Generator.class, "rndName",
+                new HandlerRandomName());
+        add(Generator.class, "rndSurname",
+                new HandlerRandomSurname());
         add(Generator.class, "format",
                 new HandlerFormat());
         add(Generator.class, "template",

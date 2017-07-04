@@ -105,6 +105,10 @@ public abstract class Generators {
             throw new IllegalStateException();
         }
 
+        if (ma == null) {
+            ma = new byte[] { 0, 0, 0, 0, 0, 0 };
+        }
+
         return createStringHex(":", ma);
     }
 
