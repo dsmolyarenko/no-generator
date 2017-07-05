@@ -1,33 +1,40 @@
 main:
   type: join
-  delimiter: "\n"
   number: 1000000
   sample:
-    type: template
-    template: insert into `User` (id, uid, fName, lName, age) values ({0}, "{1}", "{2}", "{3}", "{4}");
-    samples:
-      - type: seqInt
-      - type: rndStr
-      - fName
-      - lName
-      - age
+    type: context # define context to share 'gn' generator value
+    hold: [ gn ]
+    sample:
+      type: template
+      template: |+
+        insert into `User` (id, gender, fn, ln, age) values ({0}, "{1}", "{2}", "{3}", "{4}");
+      samples:
+        - type: seqInt
+        - gn
+        - type: case   # switch by gn value
+          sample: gn
+          cases:
+            - value: m # if gn is m
+              sample:
+                parent: rn
+                m: 1
+            - value: f # if gn is f
+              sample:
+                parent: rn
+                f: 1
+        - ln
+        - age
 generators:
-  - id: fName
-    type: rndSet
-    samples:
-    - Alexander
-    - Andreas
-    - Benjamin
-    - John
-  - id: lName
-    type: rndSet
-    samples:
-    - Smith
-    - Johnson
-    - Williams
-    - Jones
-    - Brown
+  - id: gn
+    type: rndStrSet
+    samples: [ m, f ]
+  - id: ln
+    type: rndSurname
+    lang: English
   - id: age
     type: rndInt
     shift: 21
     count: 30
+  - id: rn
+    type: rndName
+    lang: Russian

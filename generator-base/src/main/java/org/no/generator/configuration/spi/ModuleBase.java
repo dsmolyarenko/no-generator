@@ -3,6 +3,8 @@ package org.no.generator.configuration.spi;
 import org.no.generator.Generator;
 import org.no.generator.Source;
 import org.no.generator.configuration.ConfigurationHandlerFactoryDefault;
+import org.no.generator.configuration.HandlerCase;
+import org.no.generator.configuration.HandlerContext;
 import org.no.generator.configuration.HandlerFormat;
 import org.no.generator.configuration.HandlerJoin;
 import org.no.generator.configuration.HandlerLoop;
@@ -26,6 +28,10 @@ import org.no.generator.configuration.SourceHandlerWell;
 public class ModuleBase extends ConfigurationHandlerFactoryDefault {
 
     public ModuleBase() {
+        add(Generator.class, "case",
+                new HandlerCase());
+        add(Generator.class, "context",
+                new HandlerContext());
         add(Generator.class, "set",
                 new HandlerSet());
         add(Generator.class, "join",

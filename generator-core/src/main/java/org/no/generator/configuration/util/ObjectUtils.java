@@ -87,6 +87,15 @@ public class ObjectUtils {
         throw new IllegalArgumentException("Type isn't parametrized: " + t);
     }
 
+    public static <T> boolean in(T object, T... objects) {
+        for (T o : objects) {
+            if (object.equals(o)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static ObjectMapper objectMapper;
 
     private static ObjectMapper getObjectMapper() {

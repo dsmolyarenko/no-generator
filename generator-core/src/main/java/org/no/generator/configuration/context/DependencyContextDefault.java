@@ -17,7 +17,7 @@ public class DependencyContextDefault extends DependencyContextBase {
     }
 
     @Override
-    public <T> T get(Class<T> type, Object o) {
+    public <T> T get(Class<T> type, Object o, DependencyContext context) {
 
         if (o == null) {
             try {
@@ -55,7 +55,7 @@ public class DependencyContextDefault extends DependencyContextBase {
                 properties = merge(get(Properties.class, parent).properties, properties);
             }
 
-            T dependency = dependencyFactory.create(properties, type, this);
+            T dependency = dependencyFactory.create(properties, type, context);
             if (id != null) {
                 set(type, id, dependency);
 

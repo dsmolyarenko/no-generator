@@ -3,7 +3,7 @@ package org.no.generator.configuration.context;
 public class DependencyContextStatic extends DependencyContextBase {
 
     @Override
-    public <T> T get(Class<T> type, Object o) {
+    public <T> T get(Class<T> type, Object o, DependencyContext context) {
 
         if (o instanceof String) {
             String id = (String) o;
