@@ -2,7 +2,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>generator-core</artifactId>
+    <artifactId>generator-text</artifactId>
     <packaging>jar</packaging>
 
     <parent>
@@ -13,15 +13,15 @@
     </parent>
 
     <dependencies>
-
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>org.no.generator</groupId>
+            <artifactId>generator-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <artifactId>commons-csv</artifactId>
         </dependency>
 
         <dependency>

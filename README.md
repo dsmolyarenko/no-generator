@@ -20,11 +20,11 @@ The `main` appender is being configured via YAML configuration file. See a simpl
 ```yaml
 main:
   type: join
-  delimiter: "\n"
   number: 1000000
   sample:
     type: template
-    template: insert into `User` (id, uid, fn, ln, age) values ({0}, "{1}", "{2}", "{3}", "{4}");
+    template: |+
+      insert into `User` (id, uid, fn, ln, age) values ({0}, "{1}", "{2}", "{3}", "{4}");
     samples:
       - type: seqInt
       - type: rndStr
@@ -33,11 +33,12 @@ main:
       - age
 generators:
   - id: fn
-    type: rndSet
-    samples:[ Alexander, Andreas, Benjamin, John ]
+    type: TextName
+    l: English
+    g: m
   - id: ln
-    type: rndSet
-    samples: [ Smith, Johnson, Williams, Jones, Brown ]
+    type: TextSurname
+    l: English
   - id: age
     type: rndInt
     shift: 21
@@ -45,7 +46,7 @@ generators:
 sources:
 ```
 
-The generators or random data source can be described inline or via references. Additional root section `generators` and `sources` are provided.
+The generators or random data source can be described inline or via references. Additional root sections `generators` and `sources` are provided.
 
 #### Generator Structure:
 Pproperty | Description | Mandatory
@@ -110,11 +111,12 @@ main:
       - age
 generators:
   - id: fn
-    type: rndStrSet
-    samples: [ Alexander, Andreas, Benjamin, John ]
+    type: TextName
+    l: English
+    g: m
   - id: ln
-    type: rndStrSet
-    samples: [ Smith, Johnson, Williams, Jones, Brown ]
+    type: TextSurname
+    l: English
   - id: age
     type: rndInt
     shift: 21

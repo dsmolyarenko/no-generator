@@ -14,14 +14,8 @@ main:
         - type: case   # switch by gn value
           sample: gn
           cases:
-            - value: m # if gn is m
-              sample:
-                parent: rn
-                m: 1
-            - value: f # if gn is f
-              sample:
-                parent: rn
-                f: 1
+            - { value: m, sample: { type: TextName, l: Russian, g: m }}
+            - { value: f, sample: { type: TextName, l: Russian, g: f }}
         - ln
         - age
 generators:
@@ -30,11 +24,11 @@ generators:
     samples: [ m, f ]
   - id: ln
     type: rndSurname
-    lang: English
+    l: Russian
   - id: age
     type: rndInt
     shift: 21
     count: 30
   - id: rn
     type: rndName
-    lang: Russian
+    l: Russian
