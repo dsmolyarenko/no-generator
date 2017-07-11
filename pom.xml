@@ -18,6 +18,7 @@
         <module>generator-core</module>
         <module>generator-base</module>
         <module>generator-text</module>
+        <module>generator-geo</module>
         <module>generator-cli</module>
     </modules>
 

@@ -1,6 +1,7 @@
 package org.no.generator.configuration;
 
 import org.no.generator.Generator;
+import org.no.generator.GeneratorValueHolder;
 import org.no.generator.Generators;
 import org.no.generator.Source;
 import org.no.generator.Sources;
@@ -45,9 +46,9 @@ public class ConfigurationFactory {
             .register(Generator.class, "CurrentDate"     , Generators.createCurrentDate())
             .register(Generator.class, "CurrentTime"     , Generators.createCurrentTime())
             .register(Generator.class, "CurrentDateTime" , Generators.createCurrentDateTime())
-            .register(Generator.class, "NetworkIp"   , Generators.createNetworkIp())
-            .register(Generator.class, "NetworkHost" , Generators.createNetworkHost())
-            .register(Generator.class, "NetworkMac"  , Generators.createNetworkMac())
+            .register(Generator.class, "NetworkIp"   , new GeneratorValueHolder(Generators.createNetworkIp()))
+            .register(Generator.class, "NetworkHost" , new GeneratorValueHolder(Generators.createNetworkHost()))
+            .register(Generator.class, "NetworkMac"  , new GeneratorValueHolder(Generators.createNetworkMac()))
         ;
 
         DependencyContext dependencyContext = new DependencyContextDefault(system,

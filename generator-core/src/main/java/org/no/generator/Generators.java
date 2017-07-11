@@ -52,64 +52,70 @@ public abstract class Generators {
     }
 
     public static Generator createNetworkIp() {
-        NetworkInterface networkInterface = getNonLoopbackNetworkInterface();
+        return a -> {
+            NetworkInterface networkInterface = getNonLoopbackNetworkInterface();
 
-        if (networkInterface == null) {
-            return createEmpty();
-        }
+            if (networkInterface == null) {
+                return;
+            }
 
-        InetAddress ia = null;
-        Enumeration<InetAddress> ias = networkInterface.getInetAddresses();
-        if (ias.hasMoreElements()) {
-            ia = ias.nextElement();
-        }
+            InetAddress ia = null;
+            Enumeration<InetAddress> ias = networkInterface.getInetAddresses();
+            if (ias.hasMoreElements()) {
+                ia = ias.nextElement();
+            }
 
-        if (ia == null) {
-            return createEmpty();
-        }
+            if (ia == null) {
+                return;
+            }
 
-        return createString(ia.getHostAddress());
+            createString(ia.getHostAddress()).append(a);
+        };
     }
 
     public static Generator createNetworkHost() {
-        NetworkInterface networkInterface = getNonLoopbackNetworkInterface();
+        return a -> {
+            NetworkInterface networkInterface = getNonLoopbackNetworkInterface();
 
-        if (networkInterface == null) {
-            return createEmpty();
-        }
+            if (networkInterface == null) {
+                return;
+            }
 
-        InetAddress ia = null;
-        Enumeration<InetAddress> ias = networkInterface.getInetAddresses();
-        if (ias.hasMoreElements()) {
-            ia = ias.nextElement();
-        }
+            InetAddress ia = null;
+            Enumeration<InetAddress> ias = networkInterface.getInetAddresses();
+            if (ias.hasMoreElements()) {
+                ia = ias.nextElement();
+            }
 
-        if (ia == null) {
-            return createEmpty();
-        }
+            if (ia == null) {
+                return;
+            }
 
-        return createString(ia.getHostName());
+            createString(ia.getHostName()).append(a);
+        };
     }
 
     public static Generator createNetworkMac() {
-        NetworkInterface networkInterface = getNonLoopbackNetworkInterface();
+        return a -> {
+            NetworkInterface networkInterface = getNonLoopbackNetworkInterface();
 
-        if (networkInterface == null) {
-            return createEmpty();
-        }
+            if (networkInterface == null) {
+                return;
+            }
 
-        byte[] ma;
-        try {
-            ma = networkInterface.getHardwareAddress();
-        } catch (SocketException e) {
-            throw new IllegalStateException();
-        }
+            byte[] ma;
+            try {
+                ma = networkInterface.getHardwareAddress();
+            } catch (SocketException e) {
+                throw new IllegalStateException();
+            }
 
-        if (ma == null) {
-            ma = new byte[] { 0, 0, 0, 0, 0, 0 };
-        }
+            if (ma == null) {
+                ma = new byte[] { 0, 0, 0, 0, 0, 0 };
+            }
 
-        return createStringHex(":", ma);
+            createStringHex(":", ma).append(a);;
+        };
     }
 
     private static NetworkInterface getNonLoopbackNetworkInterface() {
@@ -147,6 +153,13 @@ public abstract class Generators {
         AtomicInteger h = new AtomicInteger();
         return a -> {
             generators[h.getAndIncrement() % generators.length].append(a);
+        };
+    }
+
+    public static Generator createAny(Generator... generators) {
+        Source source = Sources.createDefault();
+        return a -> {
+            generators[source.nextInt(generators.length)].append(a);
         };
     }
 
