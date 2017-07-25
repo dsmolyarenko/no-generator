@@ -1,6 +1,6 @@
 package org.no.generator.configuration;
 
-import static org.no.generator.configuration.util.ObjectUtils.transform;
+import static org.no.generator.configuration.util.ObjectUtils.map;
 
 import org.no.generator.Generator;
 import org.no.generator.Source;
@@ -13,7 +13,7 @@ public final class HandlerRandomAny extends ConfigurationHandlerDefault<Generato
 
         Source source = context.get(Source.class, c.source);
 
-        Generator[] samples = transform(c.samples, t -> context.get(Generator.class, t), Generator.class);
+        Generator[] samples = map(c.samples, t -> context.get(Generator.class, t), Generator.class);
 
         return a -> samples[source.nextInt(samples.length)].append(a);
     }

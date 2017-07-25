@@ -13,7 +13,10 @@ public class GeneratorValueHolder implements Generator {
         this.generator = generator;
     }
 
-    public String getValue() {
+    public String getValue() throws IOException {
+        if (value == null) {
+            value = read();
+        }
         return value;
     }
 
@@ -24,12 +27,12 @@ public class GeneratorValueHolder implements Generator {
     @Override
     public void append(Appendable a) throws IOException {
         if (value == null) {
-            value = read(a);
+            value = read();
         }
         a.append(value);
     }
 
-    private String read(Appendable a) throws IOException {
+    private String read() throws IOException {
         StringBuilder sb = new StringBuilder();
         generator.append(sb);
         return sb.toString();

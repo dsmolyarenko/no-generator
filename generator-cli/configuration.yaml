@@ -1,34 +1,105 @@
 main:
   type: join
-  number: 1000000
   sample:
-    type: context # define context to share 'gn' generator value
-    hold: [ gn ]
-    sample:
-      type: template
-      template: |+
-        insert into `User` (id, gender, fn, ln, age) values ({0}, "{1}", "{2}", "{3}", "{4}");
-      samples:
-        - type: seqInt
-        - gn
-        - type: case   # switch by gn value
-          sample: gn
-          cases:
-            - { value: m, sample: { type: TextName, l: Russian, g: m }}
-            - { value: f, sample: { type: TextName, l: Russian, g: f }}
-        - ln
-        - age
-generators:
-  - id: gn
-    type: rndStrSet
-    samples: [ m, f ]
-  - id: ln
-    type: rndSurname
-    l: Russian
-  - id: age
-    type: rndInt
-    shift: 21
-    count: 30
-  - id: rn
-    type: rndName
-    l: Russian
+    type: provider
+    provider:
+      type: format
+      format: |+
+        {iso} {name} {phonecode}
+      provider:
+        type: store
+        store:
+          type: fulltextsearch
+          query: iso:ao
+          store:
+            type: simple
+            names:
+              [ iso, name, phonecode ]
+            data: [
+              [ 'AF', 'Afghanistan'   ,   93 ],
+              [ 'AL', 'Albania'       ,  355 ],
+              [ 'DZ', 'Algeria'       ,  213 ],
+              [ 'AS', 'American Samoa', 1684 ],
+              [ 'AD', 'Andorra'       ,  376 ],
+              [ 'AO', 'Angola'        ,  244 ],
+            ]
+
+
+#main:
+#  type: join
+#  number: 1000
+#  sample:
+#    type: provider
+#    provider:
+#      type: format
+#      format: |+
+#        {0} {1} {2}
+#      provider:
+#        type: projection
+#        fields: [ city, code, population ]
+#        provider:
+#          type: store
+#          entry: city
+#          query: |+
+#            POPULATION:[8000 TO 1000000]
+#          store:
+#            type: fulltextsearch
+#            store:
+#              type: h2
+#              imports: [ /db-gl.sql ]
+
+#
+#      type: join
+#      number: 1000
+#      sample:
+#        type: template
+#        template: |+
+#          { "create": { "_index": "sales", "_type": "event", "_id": "{0}" }}
+#          { "user": "{1}", "location": {2} }
+#        samples:
+#          - type: seqInt
+#            next: 1
+#          - type: rndStr
+#            length: 4
+#            ranges: [ 'A-Z' ]
+#          - type: location
+#            code: us
+#            source:
+#               type: well
+#               distribution: [ 0.1, 0.5, 1, 0.5, 0.1 ]
+#generators:
+#  - id: head
+#    type: text
+#    text: |+
+#      PUT /_bulk?pretty HTTP/1.1
+#      Host: localhost:9200
+#      Content-Type: application/json
+
+#               main:
+#  type: join
+#  number: 1000
+#  sample:
+#    type: http
+#    header: |+
+#      PUT /_bulk?pretty HTTP/1.1
+#      Host: localhost:9200
+#      User-Agent: curl/7.42.1
+#      Accept: */*
+#      Content-Type: application/json
+#    headerArguments: []
+#    sample:
+#      type: join
+#      number: 1000
+#      sample:
+#        type: template
+#        template: |+
+#          { "create":  { "_index": "sales", "_type": "distribution", "_id": "{0}" }}
+#          { "location" : "{1}" }
+#        samples:
+#          - type: seqInt
+#            next: 1
+#          - type: GeoCountry
+#            name: Moldova
+#            source:
+#               type: well
+#               distribution: [ 0.01, 0.1, 1, 0.1, 0.01 ]

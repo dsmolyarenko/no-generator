@@ -1,6 +1,6 @@
 package org.no.generator.configuration;
 
-import static org.no.generator.configuration.util.ObjectUtils.transform;
+import static org.no.generator.configuration.util.ObjectUtils.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public final class HandlerTemplate extends ConfigurationHandlerDefault<Generator
             throw new ConfigurationException("Property `samples` is not defined");
         }
 
-        Generator[] samples = transform(c.samples, t -> {
+        Generator[] samples = map(c.samples, t -> {
             return context.get(Generator.class, t);
         }, Generator.class);
 
@@ -41,6 +41,19 @@ public final class HandlerTemplate extends ConfigurationHandlerDefault<Generator
 
         private Object[] samples;
 
+        public Configuration setTemplate(String template) {
+            this.template = template;
+            return this;
+        }
+
+        public Configuration setSamples(Object... samples) {
+            this.samples = samples;
+            return this;
+        }
+    }
+
+    public static Configuration configuration() {
+        return new Configuration();
     }
 
     private static Pattern pattern = Pattern.compile("(\\{(\\d)+\\})");

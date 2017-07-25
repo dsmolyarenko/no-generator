@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -20,7 +21,16 @@ public class ObjectUtils {
         return (T) o;
     }
 
-    public static <T, V> V[] transform(T[] objects, Function<T, V> transformer, Class<V> type) {
+    public static Object get(Object object, String field) {
+        return getObjectMapper().convertValue(object, Map.class).get(field);
+    }
+
+    public static void each(Object object, BiConsumer<String, Object> action) {
+        Map<String, Object> map = getObjectMapper().convertValue(object, new TypeReference<Map<String, Object>>() {});
+        map.forEach(action);
+    }
+
+    public static <T, V> V[] map(T[] objects, Function<T, V> transformer, Class<V> type) {
 
         if (objects == null) {
             return null;
@@ -34,6 +44,74 @@ public class ObjectUtils {
 
         return result;
     }
+
+    public static <E, T, C extends Throwable> Object[] apply(Transformer<E, Object, C> f, E... objects) throws C {
+
+        if (objects == null || objects.length == 0) {
+            return null;
+        }
+
+        if (objects.length == 1) {
+            return new Object[] { f.apply(objects[0]) };
+        }
+
+        Object[] result = new Object[objects.length];
+        for (int i = 0; i < objects.length; i++) {
+            result[i] = f.apply(objects[i]);
+        }
+        return result;
+    }
+
+    public static <V, E extends Throwable> void apply(Applier<Integer, V, E> a, V... objects) throws E {
+        if (objects == null) {
+            return;
+        }
+        for (int i = 0; i < objects.length; i++) {
+            a.apply(i, objects[i]);
+        }
+    }
+
+    public static <K, V, E extends Throwable> void apply(Applier<K, V, E> a, Map<K, V> map) throws E {
+        if (map == null) {
+            return;
+        }
+        for (K k : map.keySet()) {
+            V v = map.get(k);
+            if (v != null) {
+                a.apply(k, v);
+            }
+        }
+    }
+
+    public static interface Transformer<T, R, E extends Throwable> {
+
+        R apply(T t) throws E;
+
+    }
+
+    public static interface Applier<I, V, E extends Throwable> {
+
+        void apply(I i, V v) throws E;
+
+    }
+
+    public static <T> Object[] map(Function<T, Object> f, T... objects) {
+
+        if (objects == null || objects.length == 0) {
+            return null;
+        }
+
+        if (objects.length == 1) {
+            return new Object[] { f.apply(objects[0]) };
+        }
+
+        Object[] result = new Object[objects.length];
+        for (int i = 0; i < objects.length; i++) {
+            result[i] = f.apply(objects[i]);
+        }
+        return result;
+    }
+
 
     public static <T> T map(Object o, Class<T> t) {
         return getObjectMapper().convertValue(o, t);

@@ -1,6 +1,6 @@
 package org.no.generator.configuration;
 
-import static org.no.generator.configuration.util.ObjectUtils.transform;
+import static org.no.generator.configuration.util.ObjectUtils.map;
 
 import org.no.generator.Generator;
 import org.no.generator.Generators;
@@ -10,7 +10,7 @@ public final class HandlerSet extends ConfigurationHandlerDefault<Generator, Han
 
     @Override
     protected Generator create(Configuration c, DependencyContext context) {
-        return Generators.createUnion(transform(c.samples, t -> {
+        return Generators.createUnion(map(c.samples, t -> {
             return context.get(Generator.class, t);
         }, Generator.class));
     }

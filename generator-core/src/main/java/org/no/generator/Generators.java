@@ -156,8 +156,26 @@ public abstract class Generators {
         };
     }
 
-    public static Generator createAny(Generator... generators) {
+    public static Generator createAny(Generator[] generators, int total, int[] weights) {
         Source source = Sources.createDefault();
+        return a -> {
+            int i;
+            while (true) {
+                i = source.nextInt(generators.length);
+
+                int w = weights[i];
+
+                int v = source.nextInt(total);
+
+                if (v < w) {
+                    break;
+                }
+            }
+            generators[i].append(a);
+        };
+    }
+
+    public static Generator createAny(Source source, Generator... generators) {
         return a -> {
             generators[source.nextInt(generators.length)].append(a);
         };
@@ -200,5 +218,27 @@ public abstract class Generators {
             throw new IllegalStateException(e);
         }
         return sb.toString();
+    }
+
+    public static class WeightMarker {
+
+        private final Generator value;
+
+        private final int weight;
+
+        public WeightMarker(Generator value, int weight) {
+            super();
+            this.value = value;
+            this.weight = weight;
+        }
+
+        public Generator getValue() {
+            return value;
+        }
+
+        public int getWeight() {
+            return weight;
+        }
+
     }
 }
