@@ -1,6 +1,6 @@
 package org.no.generator.configuration;
 
-import org.no.generator.Generator;
+import org.no.generator.Writer;
 import org.no.generator.GeneratorValueHolder;
 import org.no.generator.Generators;
 import org.no.generator.Source;
@@ -36,19 +36,19 @@ public class ConfigurationFactory {
         DependencyContext system = new DependencyContextStatic()
             .register(Source.class, "default", Sources.createDefault())
 
-            .register(Generator.class, "SystemTimeNanoseconds" , Generators.createSystemTimeNanoseconds())
-            .register(Generator.class, "SystemTimeMicroseconds", Generators.createSystemTimeMicroseconds())
-            .register(Generator.class, "SystemTimeMilliseconds", Generators.createSystemTimeMilliseconds())
-            .register(Generator.class, "SystemTimeSeconds"     , Generators.createSystemTimeSeconds())
-            .register(Generator.class, "SystemTimeMinutes"     , Generators.createSystemTimeMinutes())
-            .register(Generator.class, "SystemTimeHours"       , Generators.createSystemTimeHours())
-            .register(Generator.class, "SystemTimeDays"        , Generators.createSystemTimeDays())
-            .register(Generator.class, "CurrentDate"     , Generators.createCurrentDate())
-            .register(Generator.class, "CurrentTime"     , Generators.createCurrentTime())
-            .register(Generator.class, "CurrentDateTime" , Generators.createCurrentDateTime())
-            .register(Generator.class, "NetworkIp"   , new GeneratorValueHolder(Generators.createNetworkIp()))
-            .register(Generator.class, "NetworkHost" , new GeneratorValueHolder(Generators.createNetworkHost()))
-            .register(Generator.class, "NetworkMac"  , new GeneratorValueHolder(Generators.createNetworkMac()))
+            .register(Writer.class, "SystemTimeNanoseconds" , Generators.createSystemTimeNanoseconds())
+            .register(Writer.class, "SystemTimeMicroseconds", Generators.createSystemTimeMicroseconds())
+            .register(Writer.class, "SystemTimeMilliseconds", Generators.createSystemTimeMilliseconds())
+            .register(Writer.class, "SystemTimeSeconds"     , Generators.createSystemTimeSeconds())
+            .register(Writer.class, "SystemTimeMinutes"     , Generators.createSystemTimeMinutes())
+            .register(Writer.class, "SystemTimeHours"       , Generators.createSystemTimeHours())
+            .register(Writer.class, "SystemTimeDays"        , Generators.createSystemTimeDays())
+            .register(Writer.class, "CurrentDate"     , Generators.createCurrentDate())
+            .register(Writer.class, "CurrentTime"     , Generators.createCurrentTime())
+            .register(Writer.class, "CurrentDateTime" , Generators.createCurrentDateTime())
+            .register(Writer.class, "NetworkIp"   , new GeneratorValueHolder(Generators.createNetworkIp()))
+            .register(Writer.class, "NetworkHost" , new GeneratorValueHolder(Generators.createNetworkHost()))
+            .register(Writer.class, "NetworkMac"  , new GeneratorValueHolder(Generators.createNetworkMac()))
         ;
 
         DependencyContext dependencyContext = new DependencyContextDefault(system,

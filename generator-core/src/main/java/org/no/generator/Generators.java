@@ -11,47 +11,47 @@ public abstract class Generators {
 
     private Generators() {}
 
-    public static Generator createSystemTimeNanoseconds() {
+    public static Writer createSystemTimeNanoseconds() {
         return a -> a.append(Long.toString(System.nanoTime()));
     }
 
-    public static Generator createSystemTimeMicroseconds() {
+    public static Writer createSystemTimeMicroseconds() {
         return a -> a.append(Long.toString(System.nanoTime() / 1000L));
     }
 
-    public static Generator createSystemTimeMilliseconds() {
+    public static Writer createSystemTimeMilliseconds() {
         return a -> a.append(Long.toString(System.nanoTime() / 1000000L));
     }
 
-    public static Generator createSystemTimeSeconds() {
+    public static Writer createSystemTimeSeconds() {
         return a -> a.append(Long.toString(System.nanoTime() / 1000000000L));
     }
 
-    public static Generator createSystemTimeMinutes() {
+    public static Writer createSystemTimeMinutes() {
         return a -> a.append(Long.toString(System.nanoTime() / 60000000000L));
     }
 
-    public static Generator createSystemTimeHours() {
+    public static Writer createSystemTimeHours() {
         return a -> a.append(Long.toString(System.nanoTime() / 3600000000000L));
     }
 
-    public static Generator createSystemTimeDays() {
+    public static Writer createSystemTimeDays() {
         return a -> a.append(Long.toString(System.nanoTime() / 86400000000000L));
     }
 
-    public static Generator createCurrentDate() {
+    public static Writer createCurrentDate() {
         return a -> a.append(new java.sql.Date(System.currentTimeMillis()).toString());
     }
 
-    public static Generator createCurrentTime() {
+    public static Writer createCurrentTime() {
         return a -> a.append(new java.sql.Time(System.currentTimeMillis()).toString());
     }
 
-    public static Generator createCurrentDateTime() {
+    public static Writer createCurrentDateTime() {
         return a -> a.append(new java.sql.Timestamp(System.currentTimeMillis()).toString());
     }
 
-    public static Generator createNetworkIp() {
+    public static Writer createNetworkIp() {
         return a -> {
             NetworkInterface networkInterface = getNonLoopbackNetworkInterface();
 
@@ -73,7 +73,7 @@ public abstract class Generators {
         };
     }
 
-    public static Generator createNetworkHost() {
+    public static Writer createNetworkHost() {
         return a -> {
             NetworkInterface networkInterface = getNonLoopbackNetworkInterface();
 
@@ -95,7 +95,7 @@ public abstract class Generators {
         };
     }
 
-    public static Generator createNetworkMac() {
+    public static Writer createNetworkMac() {
         return a -> {
             NetworkInterface networkInterface = getNonLoopbackNetworkInterface();
 
@@ -137,55 +137,30 @@ public abstract class Generators {
         return networkInterface;
     }
 
-    public static Generator createEmpty() {
+    public static Writer createEmpty() {
         return a -> {};
     }
 
-    public static Generator createUnion(Generator... generators) {
+    public static Writer createUnion(Writer... generators) {
         return a -> {
-            for (Generator g : generators) {
+            for (Writer g : generators) {
                 g.append(a);
             }
          };
     }
 
-    public static Generator createRound(Generator... generators) {
+    public static Writer createRound(Writer... generators) {
         AtomicInteger h = new AtomicInteger();
         return a -> {
             generators[h.getAndIncrement() % generators.length].append(a);
         };
     }
 
-    public static Generator createAny(Generator[] generators, int total, int[] weights) {
-        Source source = Sources.createDefault();
-        return a -> {
-            int i;
-            while (true) {
-                i = source.nextInt(generators.length);
-
-                int w = weights[i];
-
-                int v = source.nextInt(total);
-
-                if (v < w) {
-                    break;
-                }
-            }
-            generators[i].append(a);
-        };
-    }
-
-    public static Generator createAny(Source source, Generator... generators) {
-        return a -> {
-            generators[source.nextInt(generators.length)].append(a);
-        };
-    }
-
-    public static Generator createString(String string) {
+    public static Writer createString(String string) {
         return a -> a.append(string);
     }
 
-    public static Generator createStringHex(String separator, byte... bytes) {
+    public static Writer createStringHex(String separator, byte... bytes) {
         char[] chars = "0123456789abcdef".toCharArray();
 
         StringBuilder sb = new StringBuilder();
@@ -199,7 +174,7 @@ public abstract class Generators {
         return a -> a.append(sb);
     }
 
-    public static Generator createStringDec(String separator, byte... bytes) {
+    public static Writer createStringDec(String separator, byte... bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
             if (separator != null && sb.length() > 0) {
@@ -210,7 +185,7 @@ public abstract class Generators {
         return a -> a.append(sb);
     }
 
-    public static String toString(Generator g) {
+    public static String toString(Writer g) {
         StringBuilder sb = new StringBuilder();
         try {
             g.append(sb);
@@ -222,17 +197,17 @@ public abstract class Generators {
 
     public static class WeightMarker {
 
-        private final Generator value;
+        private final Writer value;
 
         private final int weight;
 
-        public WeightMarker(Generator value, int weight) {
+        public WeightMarker(Writer value, int weight) {
             super();
             this.value = value;
             this.weight = weight;
         }
 
-        public Generator getValue() {
+        public Writer getValue() {
             return value;
         }
 

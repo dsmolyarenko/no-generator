@@ -17,7 +17,7 @@
         <module>parent</module>
         <module>generator-core</module>
         <module>generator-base</module>
-        <module>generator-store-csv</module>
+        <module>generator-data</module>
         <module>generator-store-h2</module>
         <module>generator-store-lucene</module>
         <module>generator-topology</module>

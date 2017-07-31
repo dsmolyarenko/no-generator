@@ -8,24 +8,25 @@ import org.apache.commons.math3.random.Well19937a;
 import org.apache.commons.math3.random.Well19937c;
 import org.apache.commons.math3.random.Well44497a;
 import org.apache.commons.math3.random.Well44497b;
-import org.no.generator.Source;
+import org.no.generator.Sequence;
 import org.no.generator.configuration.context.DependencyContext;
-import org.no.generator.configuration.util.SourceUtils;
 
-public class SourceHandlerWell extends ConfigurationHandlerDefault<Source, SourceHandlerWell.Configuration> {
+public class SequenceHandlerWell extends ConfigurationHandlerDefault<Sequence, SequenceHandlerWell.Configuration> {
 
     @Override
-    protected Source create(Configuration c, DependencyContext context) {
-        return SourceUtils.decorate(c.pool.getWell()::nextDouble, c.di, c.distribution);
+    protected Sequence create(Configuration c, DependencyContext context) {
+        AbstractWell well = c.pool.getWell();
+        return (min, max, bounded, weights) -> {
+            if (max < min) {
+                throw new IllegalArgumentException("Min value should be less or equals to max");
+            }
+            return () -> min + well.nextInt(min - max);
+        };
     }
 
     public static final class Configuration {
 
         private Pool pool = Pool.Well1024a;
-
-        private double[] distribution;
-
-        private String di  = SourceUtils.LN;
 
         public enum Pool {
 

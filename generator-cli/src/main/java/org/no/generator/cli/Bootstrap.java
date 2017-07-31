@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.lang.Thread.State;
 import java.util.ResourceBundle;
 
@@ -19,10 +18,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.no.generator.Generator;
 import org.no.generator.Source;
+import org.no.generator.Store;
+import org.no.generator.Writer;
 import org.no.generator.configuration.ConfigurationFactory;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -53,13 +54,14 @@ public class Bootstrap {
         }
 
         ConfigurationFactory configurationFactory = ConfigurationFactory.createDefaultSpiFactory();
-        configurationFactory.collect(Source.class, configuration.root.getSources());
-        configurationFactory.collect(Generator.class, configuration.root.getGenerators());
+        configurationFactory.collect(Source.class, configuration.root.sources);
+        configurationFactory.collect(Writer.class, configuration.root.writers);
+        configurationFactory.collect(Store.class, configuration.root.stores);
 
-        Generator generator = configurationFactory.resolve(Generator.class, configuration.root.getMain());
+        Writer generator = configurationFactory.resolve(Writer.class, configuration.root.main);
 
         Thread main = new Thread(() -> {
-            try (Writer w = configuration.writer) {
+            try (java.io.Writer w = configuration.writer) {
                 generator.append(w);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -103,7 +105,7 @@ public class Bootstrap {
         // configure output writer
         //
 
-        Writer writer;
+        java.io.Writer writer;
         switch (output) {
             case "-":
                 Console console = System.console();
@@ -114,7 +116,7 @@ public class Bootstrap {
                 }
                 break;
             case "none":
-                writer = new Writer() {
+                writer = new java.io.Writer() {
                     @Override
                     public void write(char[] cbuf, int off, int len) {}
 
@@ -158,6 +160,9 @@ public class Bootstrap {
             throw new ParseException(e.getMessage());
         }
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
+        om.setVisibility(om.getSerializationConfig().getDefaultVisibilityChecker()
+            .withFieldVisibility(Visibility.ANY)
+        );
         configuration.root = om.readValue(reader, Root.class);
 
         return configuration;
@@ -178,7 +183,7 @@ public class Bootstrap {
 
     private static class Configuration {
 
-        private Writer writer;
+        private java.io.Writer writer;
 
         private Root root;
 
@@ -188,39 +193,11 @@ public class Bootstrap {
 
         private Object main;
 
-        private Object[] generators;
+        private Object[] writers = EMPTY;
 
-        private Object[] sources;
+        private Object[] sources = EMPTY;
 
-        public Object getMain() {
-            return main;
-        }
-
-        public void setMain(Object main) {
-            this.main = main;
-        }
-
-        public Object[] getGenerators() {
-            if (generators == null) {
-                generators = EMPTY;
-            }
-            return generators;
-        }
-
-        public void setGenerators(Object[] sources) {
-            this.generators = sources;
-        }
-
-        public Object[] getSources() {
-            if (sources == null) {
-                sources = EMPTY;
-            }
-            return sources;
-        }
-
-        public void setSources(Object[] sources) {
-            this.sources = sources;
-        }
+        private Object[] stores = EMPTY;
 
         private static final Object[] EMPTY = new Object[0];
     }

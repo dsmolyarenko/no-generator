@@ -6,16 +6,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import org.no.generator.Source;
+import org.no.generator.Sequence;
 import org.no.generator.configuration.context.DependencyContext;
-import org.no.generator.configuration.util.SourceUtils;
 import org.no.generator.configuration.util.StreamUtils;
 import org.no.generator.configuration.util.StreamUtils.IncompleteByteContext;
 
-public class SourceHandlerFile extends ConfigurationHandlerDefault<Source, SourceHandlerFile.Configuration> {
+public class SequenceHandlerFile extends ConfigurationHandlerDefault<Sequence, SequenceHandlerFile.Configuration> {
 
     @Override
-    protected Source create(Configuration c, DependencyContext context) {
+    protected Sequence create(Configuration c, DependencyContext context) {
         InputStream dis;
         try {
             dis = new DataInputStream(c.bs > 0
@@ -25,24 +24,39 @@ public class SourceHandlerFile extends ConfigurationHandlerDefault<Source, Sourc
             throw new ConfigurationException("Unable to find file: " + c.path);
         }
 
-        double max = 1L << c.bl;
-
         IncompleteByteContext ctx = new IncompleteByteContext();
 
-        return SourceUtils.decorate(() -> StreamUtils.readLong(ctx, dis, c.bl) / max, c.di, c.distribution);
+        return (min, max, bounded, weights) -> {
+            if (max < min) {
+                throw new IllegalArgumentException("Min value should be less or equals than max");
+            }
+            int length = max - min;
+            return () ->  {
+                return min + (int) StreamUtils.readLong(ctx, dis, c.bc) % length;
+            };
+        };
     }
 
     public static final class Configuration {
 
-        private int bl = 16;
+        /**
+         * Bit count.
+         */
+        private int bc = 16;
 
-        private int bs = 8192;
+        /**
+         * Buffer size.
+         */
+        private int bs = 128;
 
+        /**
+         * source file path.
+         */
         private String path;
 
-        private double[] distribution;
-
-        private String di  = SourceUtils.LN;
     }
 
+    public static void main(String[] args) {
+        System.out.println(System.currentTimeMillis());
+    }
 }

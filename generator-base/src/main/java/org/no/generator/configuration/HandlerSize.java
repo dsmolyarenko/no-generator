@@ -1,14 +1,14 @@
 package org.no.generator.configuration;
 
-import org.no.generator.Generator;
+import org.no.generator.Writer;
 import org.no.generator.configuration.context.DependencyContext;
 
-public final class HandlerSize extends ConfigurationHandlerDefault<Generator, HandlerSize.Configuration> {
+public final class HandlerSize extends ConfigurationHandlerDefault<Writer, HandlerSize.Configuration> {
 
     @Override
-    protected Generator create(Configuration c, DependencyContext context) {
+    protected Writer create(Configuration c, DependencyContext context) {
 
-        Generator generator = context.get(Generator.class, c.sample);
+        Writer generator = context.get(Writer.class, c.sample);
 
         StringBuilder sb = new StringBuilder();
         return a -> {

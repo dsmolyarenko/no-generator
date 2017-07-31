@@ -4,14 +4,14 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import org.no.generator.Generator;
+import org.no.generator.Writer;
 import org.no.generator.configuration.context.DependencyContext;
 import org.no.generator.util.MutableNum;
 
-public final class HandlerSequenceDecimal extends ConfigurationHandlerDefault<Generator, HandlerSequenceDecimal.Configuration> {
+public final class HandlerDecimal extends ConfigurationHandlerDefault<Writer, HandlerDecimal.Configuration> {
 
     @Override
-    protected Generator create(Configuration c, DependencyContext context) {
+    protected Writer create(Configuration c, DependencyContext context) {
         DecimalFormat f;
         if (c.format != null) {
             if (c.locale != null) {

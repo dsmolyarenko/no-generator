@@ -4,16 +4,16 @@ import java.awt.Point;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.no.generator.Generator;
+import org.no.generator.Writer;
 import org.no.generator.Source;
 import org.no.generator.configuration.context.DependencyContext;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public final class HandlerRandomLocation extends ConfigurationHandlerDefault<Generator, HandlerRandomLocation.Configuration> {
+public final class HandlerRandomLocation extends ConfigurationHandlerDefault<Writer, HandlerRandomLocation.Configuration> {
 
     @Override
-    protected Generator create(Configuration c, DependencyContext context) {
+    protected Writer create(Configuration c, DependencyContext context) {
 
         MessageFormat mf = new MessageFormat(c.format);
 

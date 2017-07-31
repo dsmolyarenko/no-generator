@@ -7,18 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import org.no.generator.Provider;
+import org.no.generator.Source;
 import org.no.generator.configuration.context.DependencyContext;
 
-public final class ProviderHandlerFormat extends ConfigurationHandlerDefault<Provider, ProviderHandlerFormat.Configuration> {
+public final class SourceHandlerTransformer extends ConfigurationHandlerDefault<Source, SourceHandlerTransformer.Configuration> {
 
     @Override
-    protected Provider create(Configuration c, DependencyContext context) {
-        if (c.provider == null) {
-            throw new ConfigurationException("Field provider should be specified");
+    protected Source create(Configuration c, DependencyContext context) {
+        if (c.source == null) {
+            throw new ConfigurationException("Field `source` should be specified");
         }
-
-        Provider provider = context.get(Provider.class, c.provider);
+        Source source = context.get(Source.class, c.source);
 
         List<BiConsumer<StringBuilder, Object>> appenders = new ArrayList<>();
         split(c.format, (t) -> appenders.add((s, o) -> s.append(t)), (n, a) -> {
@@ -30,19 +29,19 @@ public final class ProviderHandlerFormat extends ConfigurationHandlerDefault<Pro
         });
 
         return () -> {
-            Object o = provider.next();
+            Object o = source.next();
 
             StringBuilder s = new StringBuilder();
             for (BiConsumer<StringBuilder, Object> a : appenders) {
                 a.accept(s, o);
             }
-            return s;
+            return s.toString();
         };
     }
 
     public static final class Configuration {
 
-        private Object provider;
+        private Object source;
 
         private String format;
 

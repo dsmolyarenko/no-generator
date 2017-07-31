@@ -3,34 +3,34 @@ package org.no.generator.configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.no.generator.Generator;
+import org.no.generator.Writer;
 import org.no.generator.GeneratorValueHolder;
 import org.no.generator.configuration.HandlerCase.Configuration.Case;
 import org.no.generator.configuration.context.DependencyContext;
 
-public final class HandlerCase extends ConfigurationHandlerDefault<Generator, HandlerCase.Configuration> {
+public final class HandlerCase extends ConfigurationHandlerDefault<Writer, HandlerCase.Configuration> {
 
     @Override
-    protected Generator create(Configuration c, DependencyContext context) {
+    protected Writer create(Configuration c, DependencyContext context) {
 
-        Generator g = context.get(Generator.class, c.sample);
+        Writer g = context.get(Writer.class, c.sample);
         if (g.getClass() != GeneratorValueHolder.class) {
             throw new ConfigurationException("Property 'sample' should be held by parent context");
         }
 
         GeneratorValueHolder generatorValue = (GeneratorValueHolder) g;
 
-        Map<String, Generator> cases = new HashMap<>();
+        Map<String, Writer> cases = new HashMap<>();
         for (Case cs : c.cases) {
-            cases.put(cs.value, context.get(Generator.class, cs.sample));
+            cases.put(cs.value, context.get(Writer.class, cs.sample));
         }
 
-        Generator generatorOthrwise = (c.otherwise != null)
-                ? context.get(Generator.class, c.otherwise)
+        Writer generatorOthrwise = (c.otherwise != null)
+                ? context.get(Writer.class, c.otherwise)
                 : null;
 
         return a -> {
-            Generator generator = cases.get(generatorValue.getValue());
+            Writer generator = cases.get(generatorValue.getValue());
             if (generator == null) {
                 generator = generatorOthrwise;
             }

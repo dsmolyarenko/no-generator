@@ -72,8 +72,8 @@ public class SourceUtils {
             UnivariateFunction f = ui.interpolate(range(distribution), distribution);
             return () -> {
                 while (true) {
-                    double v = s.nextDouble();
-                    double p = s.nextDouble();
+                    double v = 1;// s.nextDouble(); XXX
+                    double p = 1;// s.nextDouble(); XXX
                     if (p < f.value(v)) {
                         return v;
                     }

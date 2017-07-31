@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -15,6 +17,22 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ObjectUtils {
+
+    public static Class<?> getStackOwnerClass(int level) {
+        Set<String> classes = new LinkedHashSet<>();
+        for (StackTraceElement stackTraceElement : new Throwable().getStackTrace()) {
+            if (classes.add(stackTraceElement.getClassName())) {
+                if (classes.size() - 1 == level + 1) {
+                    try {
+                        return Class.forName(stackTraceElement.getClassName());
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+        return ObjectUtils.class;
+    }
 
     @SuppressWarnings("unchecked")
     public static <T> T safe(Object o) {
@@ -192,4 +210,5 @@ public class ObjectUtils {
         return new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
     }
+
 }

@@ -1,28 +1,42 @@
 main:
   type: join
+  delimiter: |+ 
+    ,
   sample:
-    type: provider
-    provider:
-      type: format
-      format: |+
-        {iso} {name} {phonecode}
-      provider:
-        type: store
-        store:
-          type: fulltextsearch
-          query: iso:ao
-          store:
-            type: simple
-            names:
-              [ iso, name, phonecode ]
-            data: [
-              [ 'AF', 'Afghanistan'   ,   93 ],
-              [ 'AL', 'Albania'       ,  355 ],
-              [ 'DZ', 'Algeria'       ,  213 ],
-              [ 'AS', 'American Samoa', 1684 ],
-              [ 'AD', 'Andorra'       ,  376 ],
-              [ 'AO', 'Angola'        ,  244 ],
-            ]
+    type: source
+    source:
+      type: sequence
+      data: test
+stores:
+  - id: test
+    type: csv
+    path: /db-demo1.csv
+
+#main:
+#  type: join
+#  sample:
+#    type: provider
+#    provider:
+#      type: format
+#      format: |+
+#        {iso} {name} {phonecode}
+#      provider:
+#        type: store
+#        store:
+#          type: fulltextsearch
+#          query: iso:ao
+#          store:
+#            type: simple
+#            names:
+#              [ iso, name, phonecode ]
+#            data: [
+#              [ 'AF', 'Afghanistan'   ,   93 ],
+#              [ 'AL', 'Albania'       ,  355 ],
+#              [ 'DZ', 'Algeria'       ,  213 ],
+#              [ 'AS', 'American Samoa', 1684 ],
+#              [ 'AD', 'Andorra'       ,  376 ],
+#              [ 'AO', 'Angola'        ,  244 ],
+#            ]
 
 
 #main:

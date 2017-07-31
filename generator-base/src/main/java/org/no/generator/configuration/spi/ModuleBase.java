@@ -1,92 +1,102 @@
 package org.no.generator.configuration.spi;
 
-import org.no.generator.Generator;
-import org.no.generator.Provider;
+import org.no.generator.Sequence;
 import org.no.generator.Source;
 import org.no.generator.Store;
+import org.no.generator.Writer;
 import org.no.generator.configuration.ConfigurationHandlerFactoryDefault;
 import org.no.generator.configuration.HandlerCase;
 import org.no.generator.configuration.HandlerContext;
-import org.no.generator.configuration.HandlerFormat;
+import org.no.generator.configuration.HandlerDecimal;
 import org.no.generator.configuration.HandlerHttp;
+import org.no.generator.configuration.HandlerInteger;
 import org.no.generator.configuration.HandlerJoin;
 import org.no.generator.configuration.HandlerLoop;
-import org.no.generator.configuration.HandlerProvider;
-import org.no.generator.configuration.HandlerRandomAny;
-import org.no.generator.configuration.HandlerRandomDecimal;
-import org.no.generator.configuration.HandlerRandomInteger;
-import org.no.generator.configuration.HandlerRandomString;
-import org.no.generator.configuration.HandlerRandomStringSet;
-import org.no.generator.configuration.HandlerSequenceDecimal;
-import org.no.generator.configuration.HandlerSequenceInteger;
-import org.no.generator.configuration.HandlerSequenceString;
-import org.no.generator.configuration.HandlerSet;
 import org.no.generator.configuration.HandlerSize;
+import org.no.generator.configuration.HandlerSource;
+import org.no.generator.configuration.HandlerString;
+import org.no.generator.configuration.HandlerStringSet;
+import org.no.generator.configuration.HandlerSwitch;
 import org.no.generator.configuration.HandlerTemplate;
 import org.no.generator.configuration.HandlerText;
-import org.no.generator.configuration.ProviderHandlerFormat;
-import org.no.generator.configuration.ProviderHandlerStore;
-import org.no.generator.configuration.SourceHandlerFile;
-import org.no.generator.configuration.SourceHandlerRandom;
-import org.no.generator.configuration.SourceHandlerWell;
+import org.no.generator.configuration.SequenceHandlerFile;
+import org.no.generator.configuration.SequenceHandlerSequential;
+import org.no.generator.configuration.SequenceHandlerWell;
+import org.no.generator.configuration.SourceHandlerStore;
+import org.no.generator.configuration.SourceHandlerTransformer;
+import org.no.generator.configuration.StoreHandlerCsv;
 import org.no.generator.configuration.StoreHandlerSimple;
 
 public class ModuleBase extends ConfigurationHandlerFactoryDefault {
 
     public ModuleBase() {
-        add(Generator.class, "http",
+        add(Writer.class, "http",
                 new HandlerHttp());
-        add(Generator.class, "size",
+        add(Writer.class, "size",
                 new HandlerSize());
-        add(Generator.class, "case",
+        add(Writer.class, "case",
                 new HandlerCase());
-        add(Generator.class, "context",
+        add(Writer.class, "context",
                 new HandlerContext());
-        add(Generator.class, "set",
-                new HandlerSet());
-        add(Generator.class, "join",
-                new HandlerJoin());
-        add(Generator.class, "loop",
+        add(Writer.class, "loop",
                 new HandlerLoop());
-        add(Generator.class, "text",
+        add(Writer.class, "join",
+                new HandlerJoin());
+
+        add(Writer.class, "text",
                 new HandlerText());
-        add(Generator.class, "seqInt",
-                new HandlerSequenceInteger());
-        add(Generator.class, "seqDec",
-                new HandlerSequenceDecimal());
-        add(Generator.class, "seqStr",
-                new HandlerSequenceString());
-        add(Generator.class, "rndAny",
-                new HandlerRandomAny());
-        add(Generator.class, "rndStrSet",
-                new HandlerRandomStringSet());
-        add(Generator.class, "rndInt",
-                new HandlerRandomInteger());
-        add(Generator.class, "rndDec",
-                new HandlerRandomDecimal());
-        add(Generator.class, "rndStr",
-                new HandlerRandomString());
-        add(Generator.class, "format",
-                new HandlerFormat());
-        add(Generator.class, "template",
+
+        add(Writer.class, "Integer",
+                new HandlerInteger());
+        add(Writer.class, "Decimal",
+                new HandlerDecimal());
+        add(Writer.class, "String",
+                new HandlerString());
+
+        add(Writer.class, "StringSet",
+                new HandlerStringSet()); // make it ObjectSet
+
+        //
+        // Writers
+        //
+
+        add(Writer.class, "Switch",
+                new HandlerSwitch());
+        add(Writer.class, "Format",
                 new HandlerTemplate());
+        add(Writer.class, "Source",
+                new HandlerSource());
 
-        add(Source.class, "random",
-                new SourceHandlerRandom());
-        add(Source.class, "well",
-                new SourceHandlerWell());
-        add(Source.class, "file",
-                new SourceHandlerFile());
+        //
+        // Sequences
+        //
 
-        add(Generator.class, "Provider",
-                new HandlerProvider());
+        add(Sequence.class, "sequential",
+                new SequenceHandlerSequential());
+        add(Sequence.class, "random",
+                new SequenceHandlerSequential());
+        add(Sequence.class, "well",
+                new SequenceHandlerWell());
+        add(Sequence.class, "file",
+                new SequenceHandlerFile());
 
-        add(Provider.class, "Format",
-                new ProviderHandlerFormat());
-        add(Provider.class, "Store",
-                new ProviderHandlerStore());
+        //
+        // Sources
+        //
+
+        add(Source.class, "Store",
+                new SourceHandlerStore());
+        add(Source.class, "Transformer",
+                new SourceHandlerTransformer());
+
+        //
+        // Stores
+        //
 
         add(Store.class, "Simple",
                 new StoreHandlerSimple());
+        add(Store.class, "Csv",
+                new StoreHandlerCsv());
+
     }
 }

@@ -1,14 +1,15 @@
 package org.no.generator.configuration;
 
-import org.no.generator.Generator;
+import org.no.generator.Writer;
+import org.no.generator.DataSourceExhaustedException;
 import org.no.generator.configuration.context.DependencyContext;
 
-public final class HandlerJoin extends ConfigurationHandlerDefault<Generator, HandlerJoin.Configuration> {
+public final class HandlerJoin extends ConfigurationHandlerDefault<Writer, HandlerJoin.Configuration> {
 
     @Override
-    protected Generator create(Configuration c, DependencyContext context) {
+    protected Writer create(Configuration c, DependencyContext context) {
 
-        Generator sample = context.get(Generator.class, c.sample);
+        Writer sample = context.get(Writer.class, c.sample);
 
         return a -> {
             if (c.prefix != null) {
@@ -26,7 +27,11 @@ public final class HandlerJoin extends ConfigurationHandlerDefault<Generator, Ha
                         a.append(c.delimiter);
                     }
                 }
-                sample.append(a);
+                try {
+                    sample.append(a);
+                } catch (DataSourceExhaustedException e) {
+                    break;
+                }
             }
 
             if (c.suffix != null) {
@@ -45,7 +50,7 @@ public final class HandlerJoin extends ConfigurationHandlerDefault<Generator, Ha
 
         private Object sample;
 
-        private int number = 16;
+        private int number = Integer.MAX_VALUE;
 
     }
 

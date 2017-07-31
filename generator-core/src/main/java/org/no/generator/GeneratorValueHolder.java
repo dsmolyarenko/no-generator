@@ -2,13 +2,13 @@ package org.no.generator;
 
 import java.io.IOException;
 
-public class GeneratorValueHolder implements Generator {
+public class GeneratorValueHolder implements Writer {
 
-    private final Generator generator;
+    private final Writer generator;
 
     private String value;
 
-    public GeneratorValueHolder(Generator generator) {
+    public GeneratorValueHolder(Writer generator) {
         super();
         this.generator = generator;
     }

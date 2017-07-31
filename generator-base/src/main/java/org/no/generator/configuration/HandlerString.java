@@ -1,12 +1,12 @@
 package org.no.generator.configuration;
 
-import org.no.generator.Generator;
+import org.no.generator.Writer;
 import org.no.generator.configuration.context.DependencyContext;
 
-public final class HandlerSequenceString extends ConfigurationHandlerDefault<Generator, HandlerSequenceString.Configuration> {
+public final class HandlerString extends ConfigurationHandlerDefault<Writer, HandlerString.Configuration> {
 
     @Override
-    protected Generator create(Configuration c, DependencyContext context) {
+    protected Writer create(Configuration c, DependencyContext context) {
 
         if (c.min >= c.max) {
             throw new IllegalArgumentException("Max character should go after min in the character table: " + c.min);
@@ -50,4 +50,40 @@ public final class HandlerSequenceString extends ConfigurationHandlerDefault<Gen
         private char max = 'Z';
 
     }
+
+//    Merge two types
+
+//    protected Writer create(Configuration2 c, DependencyContext context) {
+//
+//        Source source = context.get(Source.class, c.source);
+//
+//        String string = "";
+//        for (String range : c.ranges) {
+//            if (range.charAt(1) == '-') {
+//                for (char chr = range.charAt(0); chr <= range.charAt(2); chr++) {
+//                    string += chr;
+//                }
+//            }
+//        }
+//
+//        char[] characters = string.toCharArray();
+//
+//        return a -> {
+//            StringBuilder sb = new StringBuilder();
+//            for (int i = 0; i < c.length; i++) {
+//                sb.append(characters[source.nextInt(characters.length)]);
+//            }
+//            a.append(sb);
+//        };
+//    }
+//
+//    public static final class Configuration2 {
+//
+//        private Object source;
+//
+//        private int length = 16;
+//
+//        private String[] ranges = { "0-9", "a-z", "A-Z" };
+//
+//    }
 }

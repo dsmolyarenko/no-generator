@@ -1,12 +1,11 @@
 package org.no.generator.configuration;
 
 import static org.no.generator.configuration.util.ObjectUtils.apply;
+import static org.no.generator.configuration.util.ObjectUtils.map;
+import static org.no.generator.configuration.util.ResourceUtils.openResource;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
@@ -17,10 +16,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.no.generator.Store;
 import org.no.generator.configuration.context.DependencyContext;
 
-public class StoreHandlerCSV extends ConfigurationHandlerDefault<Store, StoreHandlerCSV.Configuration> {
+public class StoreHandlerCsv extends ConfigurationHandlerDefault<Store, StoreHandlerCsv.Configuration> {
 
     @Override
     protected Store create(Configuration c, DependencyContext context) {
@@ -31,10 +31,9 @@ public class StoreHandlerCSV extends ConfigurationHandlerDefault<Store, StoreHan
 
         BufferedReader reader;
         if (c.path != null) {
-            try {
-                reader = new BufferedReader(new InputStreamReader(new FileInputStream(c.path), c.charset));
-            } catch (FileNotFoundException e) {
-                throw new ConfigurationException("Unable to open specified fiel: " + c.path);
+            reader = openResource(c.path, c.charset);
+            if (reader == null) {
+                throw new ConfigurationException("Unable to open specified resource: " + c.path);
             }
         } else {
             reader = new BufferedReader(new StringReader(c.data));
@@ -85,9 +84,9 @@ public class StoreHandlerCSV extends ConfigurationHandlerDefault<Store, StoreHan
     private static String extractName(String v) {
         int index = v.indexOf(":");
         if (index == -1) {
-            return v.toLowerCase().intern();
+            return v.toLowerCase();
         }
-        return v.substring(0, index).toLowerCase().intern();
+        return v.substring(0, index).toLowerCase();
     }
 
     private static String extractType(String v) {
@@ -105,7 +104,7 @@ public class StoreHandlerCSV extends ConfigurationHandlerDefault<Store, StoreHan
         throw new UnsupportedOperationException("Type support is not implemented yet");
     }
 
-    private static Pattern pattern = Pattern.compile(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+    private static Pattern pattern = Pattern.compile("\\s*,\\s*(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
     private static String[] read(BufferedReader reader) {
         String line;
@@ -114,10 +113,10 @@ public class StoreHandlerCSV extends ConfigurationHandlerDefault<Store, StoreHan
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        if (line == null) {
+        if (line == null || line.isEmpty()) {
             return null;
         }
-        return pattern.split(line);
+        return map(pattern.split(line), StringEscapeUtils::unescapeCsv, String.class);
     }
 
     public static final class Configuration {
